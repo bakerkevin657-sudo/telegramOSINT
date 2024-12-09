@@ -15,7 +15,7 @@ como buscar usuarios, obtener historiales de mensajes, monitorear palabras clave
 ## 📦 instalación Kali Linux
 
 ### **Paso 1:**
-# Clona este repositorio o descarga los archivos.
+# Clona este repositorio 
 ```bash
 git clone https://github.com/Ivancastl/telegramOSINT.git
 ```
