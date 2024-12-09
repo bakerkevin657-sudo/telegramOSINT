@@ -12,12 +12,30 @@ como buscar usuarios, obtener historiales de mensajes, monitorear palabras clave
 4. 🗣️ **Monitorear Palabras Clave**: Escanea todos los mensajes de tus grupos o canales para 
    encontrar coincidencias con palabras clave y genera estadísticas de los 10 grupos con más menciones.
 
-## 📦 instalación
+## 📦 instalación Kali Linux
 
 ### **Paso 1:**
 # Clona este repositorio o descarga los archivos.
 ```bash
 git clone https://github.com/Ivancastl/telegramOSINT.git
 
-y
+### **Paso 2:**
+# Accede al directorio del proyecto.
+```bash
+cd telegramOSINT
+
+### **Paso 3:**
+# Instala las dependencias necesarias.
+```bash
+pip install -r requirements.txt
+
+### **Paso 4:**
+# Ejecuta el script principal
+```bash
+python OSINT_TELEGRAM.py
+
+
+
+
+
 
