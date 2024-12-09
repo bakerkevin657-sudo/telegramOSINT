@@ -24,19 +24,19 @@ git clone https://github.com/Ivancastl/telegramOSINT.git
 # Accede al directorio del proyecto.
 ```bash
 cd telegramOSINT
-    ```
+```
 
 ### **Paso 3:**
 # Instala las dependencias necesarias.
 ```bash
 pip install -r requirements.txt
-    ```
+```
 
 ### **Paso 4:**
 # Ejecuta el script principal
 ```bash
 python OSINT_TELEGRAM.py
-    ```
+```
 
 
 
