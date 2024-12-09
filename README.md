@@ -18,21 +18,25 @@ como buscar usuarios, obtener historiales de mensajes, monitorear palabras clave
 # Clona este repositorio o descarga los archivos.
 ```bash
 git clone https://github.com/Ivancastl/telegramOSINT.git
+    ```
 
 ### **Paso 2:**
 # Accede al directorio del proyecto.
 ```bash
 cd telegramOSINT
+    ```
 
 ### **Paso 3:**
 # Instala las dependencias necesarias.
 ```bash
 pip install -r requirements.txt
+    ```
 
 ### **Paso 4:**
 # Ejecuta el script principal
 ```bash
 python OSINT_TELEGRAM.py
+    ```
 
 
 
