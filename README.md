@@ -18,7 +18,7 @@ como buscar usuarios, obtener historiales de mensajes, monitorear palabras clave
 # Clona este repositorio o descarga los archivos.
 ```bash
 git clone https://github.com/Ivancastl/telegramOSINT.git
-    ```
+```
 
 ### **Paso 2:**
 # Accede al directorio del proyecto.
