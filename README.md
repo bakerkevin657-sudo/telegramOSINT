@@ -1,4 +1,4 @@
-# 🌐 **Telegram OSINT ** 🚀
+# 🌐 Telegram OSINT 🚀
 
 **TelegramOSINTT** es un script diseñado para interactuar con la API de Telegram utilizando **Telethon**. 
 Este script permite realizar tareas relacionadas con **Open-Source Intelligence (OSINT)**, 
