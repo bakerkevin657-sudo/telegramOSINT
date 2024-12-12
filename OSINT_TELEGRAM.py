@@ -9,7 +9,7 @@ from collections import Counter
 # Función para mostrar la etiqueta ASCII
 def mostrar_etiqueta():
     # Generar arte ASCII para "DominiOSINT"
-    texto_ascii = pyfiglet.figlet_format("TelegramOSINT")
+    texto_ascii = pyfiglet.figlet_format("Telegram-OSINT")
     print(texto_ascii)
     
     # Agregar tu nombre de usuario de Twitter y el enlace de tu grupo de Telegram
