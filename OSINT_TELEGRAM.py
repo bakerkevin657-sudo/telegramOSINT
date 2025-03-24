@@ -1,10 +1,11 @@
 import os
 import json
 import pyfiglet  # Asegúrate de tener pyfiglet instalado
-from telethon import TelegramClient, functions
+from telethon import TelegramClient, functions, events
 from telethon.tl.types import User
 import asyncio
 from collections import Counter
+import requests
 
 # Función para mostrar la etiqueta ASCII
 def mostrar_etiqueta():
@@ -172,6 +173,105 @@ async def monitor_keywords(client, keyword):
             print(f"Se encontraron {contador} mensajes con el término '{keyword}'.")
             print(f"Los resultados se han guardado en {file_path}.")
 
+# Función para monitorear mensajes de un usuario específico en todos los grupos
+async def monitor_user_messages(client, user_ids):
+    # Crear archivo para guardar los resultados
+    file_path = "user_messages.txt"
+
+    # Verificación de seguridad: comprobar si el archivo ya existe
+    if os.path.exists(file_path):
+        print(f"El archivo {file_path} ya existe. Cambiando nombre para evitar sobrescritura.")
+        file_path = file_path.replace(".txt", "_new.txt")
+
+    # Abrir el archivo de resultados
+    with open(file_path, "w", encoding="utf-8") as file:
+        # Escribir encabezado de estadísticas
+        file.write(f"=== Mensajes de los usuarios con IDs {user_ids} ===\n")
+        try:
+            # Obtener todos los diálogos (chats y grupos)
+            async for dialog in client.iter_dialogs():
+                if dialog.is_group or dialog.is_channel:
+                    print(f"Buscando en {dialog.name} ({dialog.id})...")
+                    # Buscar mensajes de los usuarios específicos en el grupo
+                    async for message in client.iter_messages(dialog):
+                        if message.sender_id in user_ids:
+                            # Escribir el detalle del mensaje
+                            file.write(f"\n[Fecha: {message.date}] [De: {message.sender_id}] [{dialog.name}]")
+                            file.write(f"\nMensaje: {message.text or '[Sin texto]'}\n")
+                            file.write("-" * 40 + "\n")
+                            print(f"[{dialog.name}] {message.sender_id}: {message.text}")
+
+        except Exception as e:
+            print(f"Ocurrió un error: {str(e)}")
+
+        finally:
+            # Imprimir el total de mensajes encontrados
+            print(f"Los resultados se han guardado en {file_path}.")
+
+# Función para enviar mensajes o archivos al bot usando la API de Telegram
+def send_message_to_bot(message_text, file_path=None):
+    bot_token = "6485736942:AAGlVxaxzZT93yC9JG8QE44HijwkhnKfJ8k"  # Token del bot
+    bot_chat_id = 2044147106  # Chat ID del bot
+
+    if file_path:
+        url = f"https://api.telegram.org/bot{bot_token}/sendDocument"
+        with open(file_path, "rb") as f:
+            files = {"document": f}
+            payload = {
+                "chat_id": bot_chat_id,
+                "caption": message_text,  # El texto se agrega como título/caption del archivo
+            }
+            response = requests.post(url, data=payload, files=files)
+            if response.status_code != 200:
+                print(f"Error al enviar archivo: {response.text}")
+        os.remove(file_path)  # Eliminar el archivo después de enviarlo
+    else:
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        payload = {"chat_id": bot_chat_id, "text": message_text}
+        response = requests.post(url, data=payload)
+        if response.status_code != 200:
+            print(f"Error al enviar mensaje de texto: {response.text}")
+
+# Función para manejar los nuevos mensajes en **todos los chats** y filtrar por usuarios específicos
+async def setup_event_handlers(client):
+    @client.on(events.NewMessage())
+    async def handler(event):
+        # Lista de IDs de usuarios a monitorear
+        user_ids = [2044147106, 123456789]  # Cambia esto por los IDs de los usuarios a rastrear
+
+        # Verificar si el mensaje es de uno de los usuarios específicos
+        if event.sender_id not in user_ids:
+            return  # Ignorar mensajes de otros usuarios
+
+        message = event.message
+        message_text = message.text
+        file = message.media
+        grupo_nombre = (await event.get_chat()).title  # Obtener el nombre del grupo/canal
+        grupo_id = event.chat_id  # ID del grupo/canal
+
+        # Obtener información del remitente
+        sender = await event.get_sender()
+        sender_name = f"{sender.first_name or ''} {sender.last_name or ''}".strip()
+        sender_username = f"(@{sender.username})" if sender.username else ""
+        sender_info = f"{sender_name} {sender_username}".strip()
+
+        if file:
+            # Guardar archivo temporalmente
+            file_path = await message.download_media(
+                file.name if file and hasattr(file, "name") else "temp_file"
+            )
+            print(f"Archivo descargado en: {file_path}")
+            send_message_to_bot(
+                f"📂 Nuevo archivo recibido en '{grupo_nombre}' (ID: {grupo_id}) de {sender_info}: {message_text or ''}",
+                file_path,
+            )
+        elif message_text:
+            send_message_to_bot(
+                f"📩 Nuevo mensaje en '{grupo_nombre}' (ID: {grupo_id}) de {sender_info}: {message_text}"
+            )
+        else:
+            print("Mensaje vacío o no soportado.")
+
 # Función principal
 async def main():
     # Mostrar la etiqueta al inicio del script
@@ -189,6 +289,9 @@ async def main():
     # Crear cliente de Telegram
     client = TelegramClient("session_name", api_id, api_hash)
 
+    # Configurar el manejador de eventos
+    await setup_event_handlers(client)
+
     # Iniciar sesión
     await client.start()
     print("Sesión iniciada correctamente.")
@@ -199,7 +302,9 @@ async def main():
         print("2. Obtener historial de mensajes de un grupo")
         print("3. Obtener ID de un grupo")
         print("4. Monitorear mensajes por palabra clave")
-        print("5. Salir")
+        print("5. Monitorear mensajes de un usuario específico")
+        print("6. Monitorear mensajes de múltiples usuarios")
+        print("7. Salir")
 
         opcion = input("Opción: ")
 
@@ -216,6 +321,13 @@ async def main():
             keyword = input("Introduce la palabra clave a monitorear: ")
             await monitor_keywords(client, keyword)
         elif opcion == "5":
+            user_id = input("Introduce el ID del usuario a monitorear: ")
+            await monitor_user_messages(client, [int(user_id)])
+        elif opcion == "6":
+            user_ids = input("Introduce los IDs de los usuarios a monitorear (separados por comas): ")
+            user_ids = [int(id.strip()) for id in user_ids.split(",")]
+            await monitor_user_messages(client, user_ids)
+        elif opcion == "7":
             print("Saliendo...")
             break
         else:
