@@ -14,16 +14,18 @@ como buscar usuarios, obtener historiales de mensajes, monitorear palabras clave
 
 ## 📦 instalación Kali Linux
 
+## 📦 instalación Kali Linux
+
 ### **Paso 1:**
 # Clona este repositorio 
 ```bash
-git clone https://github.com/Ivancastl/contacts.git
+git clone https://github.com/Ivancastl/telegramOSINT.git
 ```
 
 ### **Paso 2:**
 # Accede al directorio del proyecto.
 ```bash
-cd generador_contactos
+cd telegramOSINT
 ```
 
 ### **Paso 3:**
@@ -35,17 +37,8 @@ pip install -r requirements.txt
 ### **Paso 4:**
 # Ejecuta el script principal
 ```bash
-python generar_contacts_csv.py
+python OSINT_TELEGRAM.py
 ```
-
-El script te pedirá que ingreses:
-
-- **Cómo quieres llamar a los contactos** (Ejemplo: Persona, Usuario, Contacto).
-- **Cuántos números deseas generar** (Ejemplo: 10).
-- **Cuál es la lada de la región** (Ejemplo: 777 para Ciudad de México).
-- **Si quieres poner 3 números fijos y el resto aleatorios** (Responde "sí" o "no").
-
-El archivo CSV con los contactos generados se guardará en el directorio del proyecto con el nombre **\`datos_personalizados.csv\`**.
 
 
 
