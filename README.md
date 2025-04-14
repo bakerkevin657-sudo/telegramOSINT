@@ -12,9 +12,8 @@ como buscar usuarios, obtener historiales de mensajes, monitorear palabras clave
 4. 🗣️ **Monitorear Palabras Clave**: Escanea todos los mensajes de tus grupos o canales para 
    encontrar coincidencias con palabras clave y genera estadísticas de los 10 grupos con más menciones.
 
-## 📦 instalación Kali Linux
+## 📦 instalación 
 
-## 📦 instalación Kali Linux
 
 ### **Paso 1:**
 # Clona este repositorio 
