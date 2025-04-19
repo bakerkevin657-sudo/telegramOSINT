@@ -1,2 +1,5 @@
-telethon
 pyfiglet
+telethon
+requests
+cryptography
+emoji
