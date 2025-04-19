@@ -2,4 +2,4 @@ pyfiglet
 telethon
 requests
 cryptography
-emoji
+
