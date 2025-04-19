@@ -7,7 +7,6 @@ import asyncio
 from collections import Counter
 import requests
 from cryptography.fernet import Fernet
-import emoji
 
 class TelegramOSINT:
     def __init__(self):
@@ -22,9 +21,9 @@ class TelegramOSINT:
         """Muestra el banner ASCII art"""
         os.system('cls' if os.name == 'nt' else 'clear')
         print(pyfiglet.figlet_format("Telegram Scout", font="slant"))
-        print(emoji.emojize(":detective: Herramienta de análisis para Telegram"))
-        print(emoji.emojize(":bust_in_silhouette: Creado por @ivancastl"))
-        print(emoji.emojize(":globe_with_meridians: Grupo: t.me/+_g4DIczsuI9hOWZh"))
+        print("🕵️ Herramienta de análisis para Telegram")
+        print("👤 Creado por @ivancastl")
+        print("🌐 Grupo: t.me/+_g4DIczsuI9hOWZh")
         print("="*60 + "\n")
 
     def get_encryption_key(self):
@@ -46,7 +45,7 @@ class TelegramOSINT:
                 self.api_id = creds.get('api_id')
                 self.api_hash = creds.get('api_hash')
             except Exception as e:
-                print(emoji.emojize(f":warning: Error cargando credenciales: {e}"))
+                print(f"⚠️ Error cargando credenciales: {e}")
                 self.request_and_save_credentials()
         else:
             self.request_and_save_credentials()
@@ -54,7 +53,7 @@ class TelegramOSINT:
     def request_and_save_credentials(self):
         """Solicita y guarda las credenciales de forma segura"""
         self.show_banner()
-        print(emoji.emojize(":key: Configuración de credenciales\n"))
+        print("🔑 Configuración de credenciales\n")
         
         self.api_id = input("Introduce tu api_id: ").strip()
         self.api_hash = input("Introduce tu api_hash: ").strip()
@@ -67,9 +66,9 @@ class TelegramOSINT:
             }).encode())
             with open(self.config_file, "wb") as f:
                 f.write(encrypted_data)
-            print(emoji.emojize("\n:shield: Credenciales guardadas de forma segura"))
+            print("\n🛡️ Credenciales guardadas de forma segura")
         except Exception as e:
-            print(emoji.emojize(f"\n:red_circle: Error guardando credenciales: {e}"))
+            print(f"\n🔴 Error guardando credenciales: {e}")
         input("\nPresiona Enter para continuar...")
 
     async def buscar_usuarios(self, client, query):
@@ -81,21 +80,21 @@ class TelegramOSINT:
             ))
             
             if result.users:
-                print(emoji.emojize(f"\n:satellite: Se encontraron {len(result.users)} coincidencias:"))
+                print(f"\n📡 Se encontraron {len(result.users)} coincidencias:")
                 for user in result.users:
-                    print(emoji.emojize(f"\n:page_facing_up: ID: {user.id}"))
-                    print(emoji.emojize(f":bust_in_silhouette: Username: @{user.username}" if user.username else ":bust_in_silhouette: Username: [Ninguno]"))
-                    print(emoji.emojize(f":name_badge: Nombre: {user.first_name or ''} {user.last_name or ''}"))
-                    print(emoji.emojize(f":mobile_phone: Teléfono: {user.phone or '[Oculto]'}"))
+                    print(f"\n📄 ID: {user.id}")
+                    print(f"👤 Username: @{user.username}" if user.username else "👤 Username: [Ninguno]")
+                    print(f"📛 Nombre: {user.first_name or ''} {user.last_name or ''}")
+                    print(f"📱 Teléfono: {user.phone or '[Oculto]'}")
                     print("-"*40)
             else:
-                print(emoji.emojize(f"\n:thinking_face: No se encontraron coincidencias para '{query}'"))
+                print(f"\n🤔 No se encontraron coincidencias para '{query}'")
         except Exception as e:
-            print(emoji.emojize(f"\n:red_circle: Error buscando usuarios: {e}"))
+            print(f"\n🔴 Error buscando usuarios: {e}")
 
     async def obtener_historial_grupo(self, client):
         """Obtiene el historial de mensajes de un grupo"""
-        group_link = input(emoji.emojize(":link: Introduce el enlace del grupo: ")).strip()
+        group_link = input("🔗 Introduce el enlace del grupo: ").strip()
         
         try:
             group = await client.get_entity(group_link)
@@ -107,7 +106,7 @@ class TelegramOSINT:
             user_counter = Counter()
             
             with open(file_path, "w", encoding="utf-8") as file:
-                print(emoji.emojize(f"\n:hourglass_not_done: Obteniendo mensajes de {group.title}..."))
+                print(f"\n⏳ Obteniendo mensajes de {group.title}...")
                 
                 async for message in client.iter_messages(group):
                     sender = await message.get_sender()
@@ -129,26 +128,26 @@ class TelegramOSINT:
                 for user_id, count in user_counter.most_common(10):
                     file.write(f"ID {user_id}: {count} mensajes\n")
             
-            print(emoji.emojize(f"\n:file_folder: Historial guardado en {file_path}"))
-            print(emoji.emojize(f":bar_chart: Total mensajes procesados: {sum(user_counter.values())}"))
+            print(f"\n📁 Historial guardado en {file_path}")
+            print(f"📊 Total mensajes procesados: {sum(user_counter.values())}")
             
         except Exception as e:
-            print(emoji.emojize(f"\n:red_circle: Error obteniendo mensajes: {e}"))
+            print(f"\n🔴 Error obteniendo mensajes: {e}")
 
     async def obtener_id_grupo(self, client):
         """Obtiene el ID de un grupo o canal"""
-        group_username = input(emoji.emojize(":link: Introduce el username o enlace del grupo: ")).strip()
+        group_username = input("🔗 Introduce el username o enlace del grupo: ").strip()
         
         try:
             group = await client.get_entity(group_username)
-            print(emoji.emojize(f"\n:page_facing_up: ID del grupo/canal: {group.id}"))
-            print(emoji.emojize(f":name_badge: Nombre: {group.title}"))
+            print(f"\n📄 ID del grupo/canal: {group.id}")
+            print(f"📛 Nombre: {group.title}")
         except Exception as e:
-            print(emoji.emojize(f"\n:red_circle: Error obteniendo ID: {e}"))
+            print(f"\n🔴 Error obteniendo ID: {e}")
 
     async def buscar_palabra_clave(self, client):
         """Busca una palabra clave en todos los grupos"""
-        keyword = input(emoji.emojize(":detective: Introduce la palabra clave: ")).strip()
+        keyword = input("🕵️ Introduce la palabra clave: ").strip()
         contador = 0
         group_counter = Counter()
         file_path = "resultados_busqueda.txt"
@@ -160,11 +159,11 @@ class TelegramOSINT:
             file.write(f"RESULTADOS PARA: '{keyword}'\n\n")
             
             try:
-                print(emoji.emojize(f"\n:detective: Buscando '{keyword}' en todos los grupos..."))
+                print(f"\n🕵️ Buscando '{keyword}' en todos los grupos...")
                 
                 async for dialog in client.iter_dialogs():
                     if dialog.is_group or dialog.is_channel:
-                        print(emoji.emojize(f":speech_balloon: Escaneando {dialog.name}..."))
+                        print(f"💬 Escaneando {dialog.name}...")
                         
                         async for message in client.iter_messages(dialog, search=keyword):
                             file.write(f"\n[Grupo] {dialog.name} (ID: {dialog.id})")
@@ -176,7 +175,7 @@ class TelegramOSINT:
                             contador += 1
 
             except Exception as e:
-                print(emoji.emojize(f"\n:red_circle: Error en búsqueda: {e}"))
+                print(f"\n🔴 Error en búsqueda: {e}")
 
             finally:
                 file.write("\nESTADÍSTICAS:\n")
@@ -184,8 +183,8 @@ class TelegramOSINT:
                     group = await client.get_entity(group_id)
                     file.write(f"{group.title}: {count} menciones\n")
                 
-                print(emoji.emojize(f"\n:checkered_flag: Se encontraron {contador} mensajes con '{keyword}'"))
-                print(emoji.emojize(f":page_facing_up: Resultados guardados en {file_path}"))
+                print(f"\n🏁 Se encontraron {contador} mensajes con '{keyword}'")
+                print(f"📄 Resultados guardados en {file_path}")
 
     async def run(self):
         """Ejecuta la aplicación principal"""
@@ -194,17 +193,17 @@ class TelegramOSINT:
         
         while True:
             self.show_banner()
-            print(emoji.emojize(":gear: Menú Principal"))
-            print(emoji.emojize("1 :satellite: Buscar usuarios"))
-            print(emoji.emojize("2 :inbox_tray: Obtener historial de grupo"))
-            print(emoji.emojize("3 :page_facing_up: Obtener ID de grupo"))
-            print(emoji.emojize("4 :detective: Buscar por palabra clave"))
-            print(emoji.emojize("5 :door: Salir\n"))
+            print("⚙️ Menú Principal")
+            print("1 📡 Buscar usuarios")
+            print("2 📥 Obtener historial de grupo")
+            print("3 📄 Obtener ID de grupo")
+            print("4 🕵️ Buscar por palabra clave")
+            print("5 🚪 Salir\n")
             
-            choice = input(emoji.emojize(":triangular_flag: Selecciona una opción: ")).strip()
+            choice = input("🚩 Selecciona una opción: ").strip()
             
             if choice == "1":
-                query = input(emoji.emojize(":satellite: Término de búsqueda: "))
+                query = input("📡 Término de búsqueda: ")
                 await self.buscar_usuarios(client, query)
             elif choice == "2":
                 await self.obtener_historial_grupo(client)
@@ -213,10 +212,10 @@ class TelegramOSINT:
             elif choice == "4":
                 await self.buscar_palabra_clave(client)
             elif choice == "5":
-                print(emoji.emojize("\n:wave: ¡Hasta pronto!"))
+                print("\n👋 ¡Hasta pronto!")
                 break
             else:
-                print(emoji.emojize("\n:warning: Opción no válida"))
+                print("\n⚠️ Opción no válida")
             
             input("\nPresiona Enter para continuar...")
         
@@ -227,6 +226,6 @@ if __name__ == "__main__":
         osint_tool = TelegramOSINT()
         asyncio.run(osint_tool.run())
     except KeyboardInterrupt:
-        print(emoji.emojize("\n:stop_sign: Programa interrumpido"))
+        print("\n🛑 Programa interrumpido")
     except Exception as e:
-        print(emoji.emojize(f"\n:red_circle: Error crítico: {e}"))
+        print(f"\n🔴 Error crítico: {e}")
